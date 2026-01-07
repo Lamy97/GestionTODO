@@ -1,6 +1,10 @@
 package com.company.todo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Todo {
+    private static final Logger logger = LoggerFactory.getLogger(Todo.class);
     private Long id;
     private String title;
     private boolean completed;
@@ -52,6 +56,6 @@ public class Todo {
     }
 
     public static void main(String[] args) {
-        System.out.println("Todo application is running.");
+        logger.info("Todo application is running.");
     }
 }

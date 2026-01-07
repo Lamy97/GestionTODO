@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    tools {
+        jdk 'JDK17'
+        maven 'Maven3'
+    }
+
     environment {
         SONAR_TOKEN = credentials('sonar-token')
     }
@@ -8,33 +13,29 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                git branch: 'main',
+                    url: 'https://github.com/Lamy97/GestionTODO.git',
+                    credentialsId: 'github-credentials-id'
             }
         }
 
-        stage('Build Maven') {
+        stage('Build + Tests') {
             steps {
-                sh 'mvn clean package'
-            }
-        }
-
-        stage('Tests unitaires') {
-            steps {
-                sh 'mvn test'
+                bat 'mvn -B clean verify'
             }
         }
 
         stage('Analyse SonarQube') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh 'mvn sonar:sonar'
+                    bat "mvn -B sonar:sonar -Dsonar.login=%SONAR_TOKEN%"
                 }
             }
         }
 
         stage('Quality Gate') {
             steps {
-                timeout(time: 1, unit: 'MINUTES') {
+                timeout(time: 2, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
             }
@@ -42,7 +43,7 @@ pipeline {
 
         stage('Build Docker') {
             steps {
-                sh 'docker build -t gestiontodo:1.0 .'
+                bat 'docker build -t gestiontodo:1.0 .'
             }
         }
     }
