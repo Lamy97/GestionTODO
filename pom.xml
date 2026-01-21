@@ -15,7 +15,7 @@
         <junit.jupiter.version>5.9.3</junit.jupiter.version>
 
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-        <TodoToken>sqa_bb772d28681cb7763647747925773e74b90fd143</TodoToken>
+        <TodoToken>%token%</TodoToken>
         <sonar.login>${TodoToken}</sonar.login>
     </properties>
 
